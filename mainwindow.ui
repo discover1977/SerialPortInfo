@@ -39,6 +39,20 @@
     <item>
      <widget class="QTextEdit" name="textEdit"/>
     </item>
+    <item>
+     <widget class="QPushButton" name="pbAddProgAutorun">
+      <property name="text">
+       <string>Add program to autorun</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pbDelProgAutorun">
+      <property name="text">
+       <string>Remove program from autorun</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">

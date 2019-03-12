@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QtCore>
+#include <QCoreApplication>
 #include <QSystemTrayIcon>
 
 namespace Ui {
@@ -30,6 +31,8 @@ private slots:
     void slot_ScanPorts();
     void slot_ShowForm();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
+    void slot_pbAddProgAutorun();
+    void slot_pbDelProgAutorun();
 };
 
 #endif // MAINWINDOW_H
