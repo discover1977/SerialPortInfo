@@ -15,8 +15,8 @@
   </property>
   <property name="iconSize">
    <size>
-    <width>32</width>
-    <height>32</height>
+    <width>64</width>
+    <height>64</height>
    </size>
   </property>
   <widget class="QWidget" name="centralWidget">
@@ -40,18 +40,43 @@
      <widget class="QTextEdit" name="textEdit"/>
     </item>
     <item>
-     <widget class="QPushButton" name="pbAddProgAutorun">
-      <property name="text">
-       <string>Add program to autorun</string>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="spacing">
+       <number>4</number>
       </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="pbDelProgAutorun">
-      <property name="text">
-       <string>Remove program from autorun</string>
+      <property name="leftMargin">
+       <number>4</number>
       </property>
-     </widget>
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="rightMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="chbAutorun">
+        <property name="text">
+         <string>Autorun</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>

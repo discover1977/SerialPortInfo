@@ -9,19 +9,20 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    this->setWindowState(Qt::WindowMinimized);
+    this->setWindowTitle("Serial port info");
+    this->setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
+
     QSettings settings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
     QString progPath;
     progPath = settings.value("Serial port info", "").toString();
 
     if(progPath != "") {
-        ui->pbAddProgAutorun->setEnabled(false);
-        ui->pbDelProgAutorun->setEnabled(true);
+        ui->chbAutorun->setChecked(true);
     } else {
-        ui->pbAddProgAutorun->setEnabled(true);
-        ui->pbDelProgAutorun->setEnabled(false);
+        ui->chbAutorun->setChecked(false);
     }
 
-    this->setWindowTitle("Serial port info");
     m_trayIcon = new QSystemTrayIcon(this);
     QIcon m_icon(":/pics/pic1.png");
     m_trayIcon->setIcon(m_icon);
@@ -32,9 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_timer->start(2000);
     connect(m_timer, &QTimer::timeout, this, &MainWindow::slot_ScanPorts);
     connect(m_trayIcon, &QSystemTrayIcon::activated, this, &MainWindow::iconActivated);
-    connect(ui->pbAddProgAutorun, &QPushButton::clicked, this, &MainWindow::slot_pbAddProgAutorun);
-    connect(ui->pbDelProgAutorun, &QPushButton::clicked, this, &MainWindow::slot_pbDelProgAutorun);
-    this->setWindowState(Qt::WindowMinimized);
+    connect(ui->chbAutorun, &QCheckBox::clicked, this, &MainWindow::slot_chbAutorun);
 }
 
 MainWindow::~MainWindow()
@@ -61,25 +60,20 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
     }
 }
 
-void MainWindow::slot_pbDelProgAutorun()
+void MainWindow::slot_chbAutorun()
 {
-#ifdef Q_OS_WIN32
-    QSettings settings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
-    settings.remove("Serial port info");
-#endif
-    ui->pbAddProgAutorun->setEnabled(true);
-    ui->pbDelProgAutorun->setEnabled(false);
-}
-
-void MainWindow::slot_pbAddProgAutorun()
-{
-#ifdef Q_OS_WIN32
-    QSettings settings("\\HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
-    settings.setValue("Serial port info", QDir::toNativeSeparators(QCoreApplication::applicationFilePath()));
-    settings.sync();
-#endif
-    ui->pbAddProgAutorun->setEnabled(false);
-    ui->pbDelProgAutorun->setEnabled(true);
+    if(ui->chbAutorun->isChecked()) {
+    #ifdef Q_OS_WIN32
+        QSettings settings("\\HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+        settings.setValue("Serial port info", QDir::toNativeSeparators(QCoreApplication::applicationFilePath()));
+        settings.sync();
+    #endif
+    } else {
+    #ifdef Q_OS_WIN32
+        QSettings settings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+        settings.remove("Serial port info");
+    #endif
+    }
 }
 
 void MainWindow::changeEvent(QEvent *e)
@@ -105,7 +99,7 @@ void MainWindow::slot_ScanPorts()
     const auto portInfos = QSerialPortInfo::availablePorts();
 
     for(const QSerialPortInfo &portInfo : portInfos) {
-        ui->textEdit->append(portInfo.description() + " (" + portInfo.portName() + ")");
+        ui->textEdit->append(portInfo.portName() + " - " + portInfo.description());
         portList << (portInfo.portName());
         allPorts.append(portInfo.portName());
         allPorts.append("\r\n");

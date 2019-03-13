@@ -31,8 +31,7 @@ private slots:
     void slot_ScanPorts();
     void slot_ShowForm();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
-    void slot_pbAddProgAutorun();
-    void slot_pbDelProgAutorun();
+    void slot_chbAutorun();
 };
 
 #endif // MAINWINDOW_H
